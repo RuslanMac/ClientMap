@@ -1,0 +1,437 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Пример веб-страницы</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="mystyles.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript" src="data.js"></script>
+    <script
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin=""
+    ></script>
+  </head>
+  <body>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+      crossorigin="anonymous"
+    ></script>
+    <h1>Я карта</h1>
+
+    <div class="container-md">
+      <div class="row">
+        <div class="col-md-8">
+          <div id="mapid"></div>
+        </div>
+        <div class="col-md-4">
+          <aside>
+            <div class="row">
+              <label>Показатель</label>
+              <div class="col-md-12">
+                <select
+                  class="form-select form-select-sm"
+                  aria-label="Страны"
+                  id="indicators"
+                ></select>
+              </div>
+            </div>
+            <div class="row">
+              <label>Страны</label>
+              <div class="col-md-12">
+                <select
+                  class="form-select form-select-sm"
+                  aria-label="Показатель"
+                  id="country"
+                ></select>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-12">
+                <label style="color: rgb(54, 207, 40); font-weight: bold"
+                  >Топ лидеров</label
+                >
+                <table class="table" id="topCountries">
+                  <thead>
+                    <tr>
+                      <th scope="col">Страна</th>
+                      <th scope="col">Значение</th>
+                      <th scope="col">Превосходят на (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>USA</td>
+                      <td>3</td>
+                      <td>300%</td>
+                    </tr>
+                    <tr>
+                      <td>Poland</td>
+                      <td>1</td>
+                      <td>100%</td>
+                    </tr>
+
+                    <tr>
+                      <td>Russia</td>
+                      <td>0.1</td>
+                      <td>100%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <label style="color: rgb(37, 192, 219); font-weight: bold"
+                  >Близкие показатели</label
+                >
+                <table class="table" id="closeCountries1">
+                  <thead>
+                    <tr>
+                      <th scope="col">Страна</th>
+                      <th scope="col">Значение</th>
+                      <th scope="col">Превосходят на (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>USA</td>
+                      <td>3</td>
+                      <td>300%</td>
+                    </tr>
+                    <tr>
+                      <td>Poland</td>
+                      <td>1</td>
+                      <td>100%</td>
+                    </tr>
+
+                    <tr>
+                      <td>Russia</td>
+                      <td>0.1</td>
+                      <td>100%</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <script>
+                  var countries = [];
+                  var indicators = [];
+                  var properties = bounds.features.properties;
+                  for ([key, value] of Object.entries(
+                    bounds.features[0].properties
+                  )) {
+                    if (key != "ADMIN") {
+                      indicators.push(key);
+                    }
+                  }
+
+                  bounds.features.forEach(function (item, i, arr) {
+                    for ([key, value] of Object.entries(item.properties)) {
+                      if (key == "ADMIN") {
+                        countries.push(value);
+                      } else {
+                      }
+                    }
+                  });
+                  console.log(bounds);
+                  //Добавляем знаяения в списки страны и показателей
+                  indicators.forEach(function (item, i, arr) {
+                    $("#indicators").append(`<option>${item}</option>`);
+                  });
+                  countries.forEach(function (item, i, arr) {
+                    $("#country").append(`<option>${item}</option>`);
+                  });
+
+                  var mymap = L.map("mapid").setView([51.505, -0.09], 13);
+                  var geojson;
+                  //max Indicator Value
+                  var maxValue = 0;
+                  var indn = "total_trademark_applications";
+                  var array1 = [];
+                  var selectCountry = document.querySelector("#country");
+                  var selectIndicator = document.querySelector("#indicators");
+                  var indicator1 = $("#indicators option:selected").text();
+                  var country = $("#country option:selected").text();
+                  console.log(bounds.features[0]);
+                  // Получаем значения
+                  selectCountry.addEventListener("change", function () {
+                    console.log($("#country").val());
+
+                    getIndicatorsArray();
+                  });
+                  selectIndicator.addEventListener("change", function () {
+                    // geojson.resetStyle(e.target);
+                    $("#topCountries").empty();
+                    indicator1 = "total_trademark_applications"; //JSON.stringify($("#indicators option:selected").text());
+                    //$("#topCountries").empty();
+                    // var Parent = document.getElementById("#topCountries");
+                    // while (Parent.hasChildNodes()) {
+                    //   Parent.removeChild(Parent.firstChild);
+                    // }
+                    //getIndicatorsArray();
+
+                    getHighCountries();
+
+                    geojson = new L.geoJson(bounds, { 
+                      style: style,
+                      onEachFeature: onEachFeature,
+                    }).addTo(mymap);
+                  });
+                  L.tileLayer(
+                    "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+                    {
+                      attribution:
+                        'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                      maxZoom: 18,
+                      id: "mapbox/streets-v11",
+                      tileSize: 512,
+                      zoomOffset: -1,
+                      accessToken:
+                        "pk.eyJ1IjoicnVzbGFua2FyIiwiYSI6ImNra2djcTE2MTE0OGsycHF1ZHpicnN3ZTgifQ.Z_cXtfVb5IRYhzj8ZPqiJg",
+                    }
+                  ).addTo(mymap);
+                  function getColor(d) {
+                    return d === maxValue
+                      ? "#800026"
+                      : d > maxValue * 0.9
+                      ? "#BD0026"
+                      : d == null
+                      ? "#343434"
+                      : d > maxValue * 0.7
+                      ? "#E31A1C"
+                      : d > maxValue * 0.6
+                      ? "#FC4E2A"
+                      : d > maxValue * 0.5
+                      ? "#FD8D3C"
+                      : d > maxValue * 0.4
+                      ? "#FEB24C"
+                      : d > maxValue * 0.1
+                      ? "#FED976"
+                      : "#FFEDA0";
+                  }
+                  function style(feature) {
+                    return {
+                      fillColor: getColor(
+                        feature.properties["total_trademark_applications"]
+                      ),
+                      weight: 2,
+                      opacity: 1,
+                      color: "white",
+                      dashArray: "3",
+                      fillOpacity: 0.7,
+                    };
+                  }
+
+                  function highlightFeature(e) {
+                    var layer = e.target;
+
+                    layer.setStyle({
+                      weight: 5,
+                      color: "#666",
+                      dashArray: "",
+                      fillOpacity: 0.7,
+                    });
+
+                    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                      layer.bringToFront();
+                    }
+                    info.update({a: 1, b:2});  
+                  }
+
+                  function resetHighlight(e) {
+                    geojson.resetStyle(e.target);
+                    info.update();
+                  }
+
+                  function zoomToFeature(e) {
+                    mymap.fitBounds(e.target.getBounds());
+                  }
+
+                  function onEachFeature(feature, layer) {
+                    layer.on({
+                      mouseover: highlightFeature,
+                      mouseout: resetHighlight,
+                      click: zoomToFeature,
+                    });
+                  }
+
+                  var info = L.control();
+
+                  info.onAdd = function (mymap) {
+                    this._div = L.DomUtil.create("div", "info"); // create a div with a class "info"
+                    this.update();
+                    return this._div;
+                  };
+
+                  // method that we will use to update the control based on feature properties passed
+                  info.update = function (props) {
+                    this._div.innerHTML =
+                      `<h4>${country}</h4>` +
+                      (props
+                        ? "<b>" +
+                          props.ADMIN +
+                          "</b><br />" +
+                          props.total_trademark_applications +
+                          " people / mi<sup>2</sup>"
+                        : "Hover over a state");
+                  };
+
+                  info.addTo(mymap);
+
+                  function arrayMin(arr) {
+                    var len = arr.length,
+                      min = Infinity;
+                    while (len--) {
+                      if (arr[len] != null) {
+                        if (arr[len] < min) {
+                          min = arr[len];
+                        }
+                      }
+                    }
+                    return min;
+                  }
+
+                  function arrayMax(arr) {
+                    var len = arr.length,
+                      max = -Infinity;
+                    while (len--) {
+                      if (arr[len] > max) {
+                        max = arr[len];
+                      }
+                    }
+                    return max;
+                  }
+
+                  geojson = new L.geoJson(bounds, {
+                    style: style,
+                    onEachFeature: onEachFeature,
+                  }).addTo(mymap);
+
+                  function getIndicatorsArray() {
+                    var array = [];
+                    var minValue = 0;
+
+                    const data = bounds.features.map((feature) => {
+                      var value =
+                        feature.properties["total_trademark_applications"]; 
+                      array.push(value);
+
+                      return value;
+                    });
+                    // Максимальное и минимальное значения для нахождения пропорции по цветам
+                    maxValue = arrayMax(array);
+
+                    minValue = arrayMin(array);
+                  }
+
+                  function getHighCountries() {
+                    console.log(String(indn));
+                    array1 = [];
+
+                    var t = -1;
+                    var idplace = 0;
+                    var str = "Russia";
+                    bounds.features.forEach(function (item, i, arr) {
+                      // var nearIndicators = [];
+
+                      t = t + 1;
+ 
+                      var name = item.properties.ADMIN;
+                      var indicator = "";
+
+                      for ([key, value] of Object.entries(item.properties)) {
+                        // t = t + 1; ptnkl tp tkn
+                        if (key == "total_trademark_applications") { 
+                          indicator = value;
+                          //countries.push(value);
+                          array1.push({ name: name, value: indicator });
+                        } else {
+                        }
+                        // if (name == "Russia") {
+                        //   idplace = t;
+                        // }
+                      }
+                      console.log(name);
+                      if (name == "Russia") {
+                        idplace = t;
+                      }
+                    });
+
+                    array1.sort(function (a, b) {
+                      return a.value - b.value;
+                    });
+                    console.log(array1);
+                    var str = "Russia";
+
+                    var array3 = array1.slice(array1.length - 3, array1.length);
+                    array3.forEach(function (item, i, arr) {
+                      $("#topCountries").append(
+                        `<tr><td>${item.name}</td><td>${item.value}</td></tr>`
+                      );
+                    });
+                    idplace = 100;
+                    console.log(Number(idplace));
+                    getCloseCountries(idplace);
+
+                    console.log(array3);
+                  }
+
+                  function getCloseCountries(id) {
+                    theNearCountries = [];
+                    theNearCountries.push({
+                      name: array1[id - 1].name,
+                      value: array1[id - 1].value,
+                    });
+                    theNearCountries.push({
+                      name: array1[id - 1].name,
+                      value: array1[id - 1].value,
+                    });
+                    theNearCountries.push({
+                      name: array1[id].name,
+                      value: array1[id].value,
+                    });
+                    theNearCountries.push({
+                      name: array1[id + 1].name,
+                      value: array1[id + 1].value,
+                    });
+
+                    theNearCountries.forEach(function (item, i, arr) {
+                      $("#closeCountries1").append(
+                        `<tr><td>${item.name}</td><td>${item.value}</td></tr>`
+                      );
+                    });
+                  }
+
+                  getIndicatorsArray();
+
+                  getHighCountries();
+                </script>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <!-- Комментарий -->
+    <!-- <script type="text/javascript" scr="logic.js"></script>  -->
+  </body>
+</html>
