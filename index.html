@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Пример веб-страницы</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="mystyles.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript" src="data1.js"></script>
+    <script
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin=""
+    ></script>
+  </head>
+  <body>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+      crossorigin="anonymous"
+    ></script>
+    <h1>Я карта</h1>
+
+    <div class="container-md">
+      <div class="row">
+        <div class="col-md-8">
+          <div id="mapid"></div>
+        </div>
+        <div class="col-md-4">
+          <aside>
+            <div class="row">
+              <label>Показатель</label>
+              <div class="col-md-12">
+                <select
+                  class="form-select form-select-sm"
+                  aria-label="Страны"
+                  id="indicators"
+                ></select>
+              </div>
+            </div>
+            <div class="row">
+              <label>Страны</label>
+              <div class="col-md-12">
+                <select
+                  class="form-select form-select-sm"
+                  aria-label="Показатель"
+                  id="country"
+                >
+                  <option selected>Russia</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-12">
+                <label style="color: rgb(54, 207, 40); font-weight: bold"
+                  >Топ лидеров</label
+                >
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Страна</th>
+                      <th scope="col">Значение</th>
+                      <th scope="col">Превосходят на (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>USA</td>
+                      <td>3</td>
+                      <td>300%</td>
+                    </tr>
+                    <tr>
+                      <td>Poland</td>
+                      <td>1</td>
+                      <td>100%</td>
+                    </tr>
+
+                    <tr>
+                      <td>Russia</td>
+                      <td>0.1</td>
+                      <td>100%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <label style="color: rgb(37, 192, 219); font-weight: bold"
+                  >Близкие показатели</label
+                >
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Страна</th>
+                      <th scope="col">Значение</th>
+                      <th scope="col">Превосходят на (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>USA</td>
+                      <td>3</td>
+                      <td>300%</td>
+                    </tr>
+                    <tr>
+                      <td>Poland</td>
+                      <td>1</td>
+                      <td>100%</td>
+                    </tr>
+
+                    <tr>
+                      <td>Russia</td>
+                      <td>0.1</td>
+                      <td>100%</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <script>
+                  var countries = [];
+                  var indicators = [];
+                  for ([key, value] of Object.entries(
+                    bounds.features[0].properties
+                  )) {
+                    if (key != "ADMIN") {
+                      indicators.push(key);
+                    }
+                  }
+
+                  bounds.features.forEach(function (item, i, arr) {
+                    for ([key, value] of Object.entries(item.properties)) {
+                      if (key == "ADMIN") {
+                        countries.push(value);
+                      } else {
+                      }
+                    }
+                  });
+
+                  //Добавляем знаяения в списки страны и показателей
+                  indicators.forEach(function (item, i, arr) {
+                    $("#indicators").append(`<option>${item}</option>`);
+                  });
+                  countries.forEach(function (item, i, arr) {
+                    $("#country").append(`<option>${item}</option>`);
+                  });
+                </script>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <!-- Комментарий -->
+    <script type="text/javascript" src="logic.js"></script>
+  </body>
+</html>
