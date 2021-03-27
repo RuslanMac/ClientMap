@@ -2,9 +2,12 @@ var mymap = L.map("mapid").setView([51.505, -0.09], 13);
 var geojson;
 //max Indicator Value
 var maxValue = 0;
+var indn = "total_trademark_applications";
 var selectCountry = document.querySelector("#country");
 var selectIndicator = document.querySelector("#indicators");
-var indicator = $("#indicator option:selected").text();
+var indicator1 = $("#indicators option:selected").text();
+var country = $("#country option:selected").text();
+var array1 = [];
 console.log(bounds.features[0]);
 // Получаем значения
 selectCountry.addEventListener("change", function () {
@@ -13,8 +16,18 @@ selectCountry.addEventListener("change", function () {
   getIndicatorsArray();
 });
 selectIndicator.addEventListener("change", function () {
-  mymap.invalidateSize(true);
-  getIndicatorsArray();
+  // geojson.resetStyle(e.target);
+  
+    indicator1 = "total_trademark_applications";//JSON.stringify($("#indicators option:selected").text());
+    //$("#topCountries").empty();
+  // var Parent = document.getElementById("#topCountries");
+  // while (Parent.hasChildNodes()) {
+  //   Parent.removeChild(Parent.firstChild);
+  // }
+  //getIndicatorsArray();
+  
+  getHighCountries();
+
   geojson = new L.geoJson(bounds, {
     style: style,
     onEachFeature: onEachFeature,
@@ -54,7 +67,7 @@ function getColor(d) {
 }
 function style(feature) {
   return {
-    fillColor: getColor(feature.properties["high_tech_exports"]),
+    fillColor: getColor(feature.properties["total_trademark_applications"]), 
     weight: 2,
     opacity: 1,
     color: "white",
@@ -96,7 +109,6 @@ function onEachFeature(feature, layer) {
   });
 }
 
-
 var info = L.control();
 
 info.onAdd = function (mymap) {
@@ -108,7 +120,7 @@ info.onAdd = function (mymap) {
 // method that we will use to update the control based on feature properties passed
 info.update = function (props) {
   this._div.innerHTML =
-    "<h4>US Population Density</h4>" +
+    `<h4>${country}</h4>` +
     (props
       ? "<b>" +
         props.name +
@@ -144,7 +156,7 @@ function arrayMax(arr) {
   return max;
 }
 
-geojson = new L.geoJson(bounds, {
+geojson = new L.geoJson(bounds, { 
   style: style,
   onEachFeature: onEachFeature,
 }).addTo(mymap);
@@ -154,16 +166,86 @@ function getIndicatorsArray() {
   var minValue = 0;
 
   const data = bounds.features.map((feature) => {
-    var value = feature.properties["high_tech_exports"];
+    var value = feature.properties["total_trademark_applications"];
     array.push(value);
+
     return value;
   });
   // Максимальное и минимальное значения для нахождения пропорции по цветам
   maxValue = arrayMax(array);
-  
+
   minValue = arrayMin(array);
-  
 }
 
-function getHighCountries() {}
+function getHighCountries() {
+  console.log(String(indicator));
+  array1 = [];
+   
+  var t = -1;
+  var idplace = 0;
+  var str = "Russia";
+  bounds.features.forEach(function (item, i, arr) {
+    // var nearIndicators = [];
+
+    t = t + 1;
+
+    var name = item.properties.ADMIN;
+    var indicator = "";
+
+    for ([key, value] of Object.entries(item.properties)) {
+      // t = t + 1; ptnkl tp tkn
+      if (value == "total_trademark_applications") {
+        indicator = value;
+        //countries.push(value);
+        array1.push({ name: name, value: indicator });
+      } else {
+      }
+      // if (name == "Russia") {
+      //   idplace = t;
+      // }
+    }
+    console.log(name);
+    if (name == "Russia") {
+      idplace = t;
+    }
+  });
+
+  array1.sort(function (a, b) {
+    return a.value - b.value;
+  });
+  console.log(array1);
+  var str = "Russia";
+
+  var array3 = array1.slice(array1.length - 3, array1.length);
+  array3.forEach(function (item, i, arr) {
+    $("#topCountries").append(
+      `<tr><td>${item.name}</td><td>${item.value}</td></tr>`
+    );
+  });
+  idplace = 100;
+  console.log(Number(idplace));
+   getCloseCountries(idplace);
+
+  console.log(array3);
+}
+
+function getCloseCountries(id) {
+  theNearCountries = [];
+  theNearCountries.push({
+    name: array1[id - 1].name,
+    value: array1[id - 1].value,
+  });
+  theNearCountries.push({ name: array1[id -1].name, value: array1[id -1].value });
+  theNearCountries.push({ name: array1[id].name, value: array1[id].value });
+  theNearCountries.push({ name: array1[id + 1].name, value: array1[id + 1].value });
+
+  theNearCountries.forEach(function (item, i, arr) {
+    $("#closeCountries1").append(
+      `<tr><td>${item.name}</td><td>${item.value}</td></tr>`
+    );
+  });
+}
+
 getIndicatorsArray();
+
+getHighCountries();
