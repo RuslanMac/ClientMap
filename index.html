@@ -61,12 +61,7 @@
                   class="form-select form-select-sm"
                   aria-label="Показатель"
                   id="country"
-                >
-                  <option selected>Russia</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
+                ></select>
               </div>
             </div>
             <br />
@@ -75,7 +70,7 @@
                 <label style="color: rgb(54, 207, 40); font-weight: bold"
                   >Топ лидеров</label
                 >
-                <table class="table">
+                <table class="table" id="topCountries">
                   <thead>
                     <tr>
                       <th scope="col">Страна</th>
@@ -83,24 +78,7 @@
                       <th scope="col">Превосходят на (%)</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>USA</td>
-                      <td>3</td>
-                      <td>300%</td>
-                    </tr>
-                    <tr>
-                      <td>Poland</td>
-                      <td>1</td>
-                      <td>100%</td>
-                    </tr>
-
-                    <tr>
-                      <td>Russia</td>
-                      <td>0.1</td>
-                      <td>100%</td>
-                    </tr>
-                  </tbody>
+                  <tbody></tbody>
                 </table>
               </div>
             </div>
@@ -109,7 +87,7 @@
                 <label style="color: rgb(37, 192, 219); font-weight: bold"
                   >Близкие показатели</label
                 >
-                <table class="table">
+                <table class="table" id="closeCountries1">
                   <thead>
                     <tr>
                       <th scope="col">Страна</th>
@@ -155,7 +133,7 @@
                       }
                     }
                   });
-
+                  console.log(bounds);
                   //Добавляем знаяения в списки страны и показателей
                   indicators.forEach(function (item, i, arr) {
                     $("#indicators").append(`<option>${item}</option>`);
@@ -172,6 +150,6 @@
     </div>
 
     <!-- Комментарий -->
-    <script type="text/javascript" src="logic.js"></script>
+    <script type="text/javascript" scr="logic.js"></script>
   </body>
 </html>
